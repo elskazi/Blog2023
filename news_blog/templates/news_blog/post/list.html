@@ -1,0 +1,35 @@
+{% extends "news_blog/base.html" %}
+{% load news_blog_tags %} {# подключаем теги #}
+
+{% block title %}My Blog{% endblock %}
+{% block content %}
+
+
+    {% for post in posts %}
+        <h2>
+            <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+        </h2>
+        {% comment %} <div class="uk-label"> {{ post.tags.all|join:", " }}</div>{% endcomment %}
+            <p class="tags">
+            Теги:
+            {% for tag in post.tags.all %}
+                <a class="el-content uk-link-text" href="{% url "news_blog:post_list_by_tag" tag.slug %}">
+                    {{ tag.name }}
+                </a>
+                {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+            </p>
+        <div class="uk-panel uk-text-small uk-text-muted uk-margin">
+            Опубликовано: {{ post.publish }}, автор: {{ post.author }}
+        </div>
+        <div class="uk-panel uk-margin">
+        {{ post.body|markdown|truncatewords_html:30 }}
+{#            {{ post.body|truncatewords:30|linebreaks }}#}
+        </div>
+        <hr class="uk-divider-icon">
+    {% endfor %}
+
+
+    {% comment %} {% include 'news_blog/pagination.html' with page=page_obj%} # из за тегов выключили ListView{% endcomment %}
+    {% include 'news_blog/pagination.html' with page=posts %}
+{% endblock %}

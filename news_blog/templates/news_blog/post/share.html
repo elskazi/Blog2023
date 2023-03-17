@@ -1,0 +1,65 @@
+{% extends "news_blog/base.html" %}
+{% block title %}Share a post{% endblock %}
+{% block content %}
+    {% if sent %}
+        <h1>Успешная отправка на E-mail</h1>
+        <p>
+            "{{ post.title }}" было успешно отправлено на {{ cd.to }}.
+        </p>
+    {% else %}
+
+        <h2>Отправить "{{ post.title }}" на e-mail</h2>
+        {% comment %}
+        <form action="." method="post">
+            {% for field in form %}
+                <div>
+                    {{ field.errors }}
+                    {{ field.label_tag }} {{ field }}
+                </div>
+            {% endfor %}
+            {% csrf_token %}
+            <input type="submit" value="Отправить e-mail">
+        </form> {% endcomment %}
+
+    <div class="uk-section-default uk-section">
+        <div class="uk-container">
+            <div class="tm-grid-expand uk-child-width-1-1 uk-grid-margin uk-grid uk-grid-stack" uk-grid="">
+                <div class="uk-width-1-1 uk-first-column">
+
+                    <div class="uk-width-large">
+                        <form class="uk-form uk-panel js-form-newsletter" method="post" action=".">
+                            <ul class="uk-list" data-id="page#1-0-0-1">
+                                {% for field in form %}
+                                    {{ field.errors }}
+                                    <li class="el-item">
+
+                                        <div class="uk-child-width-expand uk-grid-small uk-grid" uk-grid="">
+                                            <div class="uk-width-auto uk-first-column">
+                                                <div class="el-title uk-margin-remove">{{ field.label_tag }} </div>
+                                            </div>
+                                            <div>
+                                                <div class="el-content uk-panel el-input ">{{ field }}</div>
+                                            </div>
+
+                                        </div>
+                                    </li>
+                                {% endfor %}
+
+                            </ul>
+                            {% csrf_token %}
+
+                            <div class="uk-grid-margin uk-first-column">
+                                <button class="el-button uk-button uk-button-default" type="submit">Отправить e-mail
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+
+{% endblock %}

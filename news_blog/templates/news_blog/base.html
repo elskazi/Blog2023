@@ -1,0 +1,121 @@
+{% load news_blog_tags %} {# подключаем теги #}
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    <link href="{% static "css/theme.css" %}" rel="stylesheet">
+    <script src="{% static "js/uikit.min.js" %}"></script>
+</head>
+<body>
+<div class="tm-page">
+    {# Меню  Мобайл #}
+    <div class="tm-header-mobile uk-hidden@m" uk-header="">
+        <div class="uk-navbar-container">
+            <div class="uk-container uk-container-expand">
+                <nav class="uk-navbar" uk-navbar="{&quot;container&quot;:&quot;.tm-header-mobile&quot;}">
+                    <div class="uk-navbar-left">
+                        <a href="{% url 'news_blog:post_list' %}" aria-label="Back to home"
+                           class="uk-logo uk-navbar-item">
+                            My Blog</a>
+                    </div>
+                    <div class="uk-navbar-right">
+                        <a uk-toggle="" aria-label="Open Menu" href="#tm-dialog-mobile" class="uk-navbar-toggle"
+                           aria-expanded="false">
+                            <div uk-navbar-toggle-icon="" class="uk-icon uk-navbar-toggle-icon">
+                            </div>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        {# Раскрывающееся меню #}
+        <div id="tm-dialog-mobile" uk-offcanvas="container: true; overlay: true" mode="slide" flip=""
+             class="uk-offcanvas">
+            <div class="uk-offcanvas-bar uk-flex uk-flex-column">
+                <button class="uk-offcanvas-close uk-close-large uk-icon uk-close"
+                        type="button" uk-close="" {#  uk-toggle="cls: uk-close-large; mode: media; media: @s"#}>
+                    <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <line fill="none" stroke="#000" stroke-width="2" x1="1" y1="1" x2="19" y2="19"></line>
+                        <line fill="none" stroke="#000" stroke-width="2" x1="19" y1="1" x2="1" y2="19"></line>
+                    </svg>
+                </button>
+                <div class="uk-margin-auto-bottom">
+                    <div class="uk-grid uk-child-width-1-1">
+                        <div>
+                            <div class="uk-panel widget widget_nav_menu" id="nav_menu-2">
+                                <ul class="uk-nav uk-nav-default">
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-6 current_page_item uk-active">
+                                        <a href="{% url 'news_blog:post_list' %}"> Главная</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {# Конец Раскрывающееся меню #}
+    {# Конец Меню  Мобайл #}
+
+    {# Меню  Десктоп #}
+    <div class="tm-header uk-visible@m" uk-header="">
+        <div class="uk-navbar-container uk-navbar-primary">
+            <div class="uk-container">
+                <nav class="uk-navbar"
+                     uk-navbar="{&quot;align&quot;:&quot;left&quot;,&quot;container&quot;:&quot;.tm-header&quot;,&quot;boundary&quot;:&quot;.tm-header .uk-navbar-container&quot;}">
+                    <div class="uk-navbar-left">
+                        <a href="{% url 'news_blog:post_list' %}" aria-label="Back to home"
+                           class="uk-logo uk-navbar-item">
+                            My Blog</a>
+                        <ul class="uk-navbar-nav">
+                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-6 current_page_item uk-active">
+                                <a href="{% url 'news_blog:post_list' %}"> Главная</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    {# <!-- Builder #page -->#}
+    <div class="uk-section-default uk-section">
+        <div class="uk-container">
+            <div class="tm-grid-expand uk-grid-margin uk-grid" uk-grid="">
+
+                {#<!-- Post -->#}
+                <div class="uk-width-2-3@m uk-first-column">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+                {#<!-- sidebar -->#}
+                <div class="uk-width-1-3@m">
+                    <h3> My sidebar </h3>
+                    {# simple template tags#}
+                    <div class="uk-panel uk-margin">В этом блоге <b>{% total_posts %}</b> статей</div>
+                    <h3>Последнии статьи:</h3>
+                    {# include template tags#}
+                    {% show_latest_posts 3 %}
+
+                    <h3>Самые комментирумые статьи</h3>
+                    {% get_most_commented_posts as most_commented_posts %}
+                    <ul>
+                        {% for post in most_commented_posts %}
+                            <li><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                    <p><a href="{% url "news_blog:post_feed" %}">Подписаться на RSS рассылку</a></p>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {#<!-- end Builder #page -->#}
+</div>
+</body>
+</html>

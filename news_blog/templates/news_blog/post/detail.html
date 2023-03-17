@@ -1,0 +1,63 @@
+{% extends "news_blog/base.html" %}
+{% load news_blog_tags %} {# подключаем теги #}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+
+    <h2>{{ post.title }}</h2>
+    <div class="uk-panel uk-text-small uk-text-muted uk-margin">
+        Published {{ post.publish }} by {{ post.author }}
+    </div>
+    <div class="uk-panel uk-margin">
+     {# {{ post.body|linebreaks }}#}
+        {{ post.body|markdown }}
+    </div>
+
+    <a class="el-content uk-button uk-button-text" href="{% url "news_blog:post_share" post.id %}">
+        Отправить на почту
+    </a>
+
+    {% comment %} Счетчик комментов  {% endcomment %}
+    <div class="uk-panel uk-margin"> {% with comments.count as total_comments %}
+        <h2>{{ total_comments }} коментарии{{ total_comments|pluralize }}</h2>
+    {% endwith %}</div>
+
+    {% comment %} Вывод комментов  {% endcomment %}
+    {% for comment in comments %}
+        <div class="comment">
+        <hr>
+            <p class="uk-panel uk-text-small uk-text-muted uk-margin">
+                Комментарий <b>{{ forloop.counter }}</b> от <b>{{ comment.name }}</b>
+                {{ comment.created }}
+            </p>
+            {{ comment.body|linebreaks }}
+        </div>
+    {% empty %}
+        <p>Пока нет комментариев.</p>
+    {% endfor %}
+    {#    Вставляем форму комментариев, обновленный вид #}
+    {% include "news_blog/post/includes/comment_form.html" %}
+{#    Старый вид комментов#}
+{#    , были проблемы, если оновить стр то еще коммент появлялся#}
+{#    {% comment %} Форма комментов  * Из Фомы убрал action="." {% endcomment %}#}
+{#    {% if new_comment %}#}
+{#        <h2>Ваш комментарий был добавлен.</h2>#}
+{#    {% else %}#}
+{#        <h2>Добавить коментарий</h2>#}
+{#        <form method="post">#}
+{#            {{ comment_form.as_p }}#}
+{#            {% csrf_token %}#}
+{#            <p><input type="submit" class="el-content uk-button" value="Отправить"></p>#}
+{#        </form>#}
+{#    {% endif %}#}
+
+    <hr>
+    <h3>Похожие статьи:</h3>
+    <div> {% for sim_post in similar_posts %}
+        <h4><a href="{{ sim_post.get_absolute_url }}">{{ sim_post.title }}</a></h4>
+        <div class="uk-panel uk-margin-small">
+            {{ post.body|truncatewords:10|linebreaks }}
+        </div>
+    {% endfor %}</div>
+{% endblock %}
