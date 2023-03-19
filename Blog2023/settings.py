@@ -152,4 +152,4 @@ EMAIL_PORT = 465
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 EMAIL_HOST_USER = 'elskazi@yandex.ru'
-EMAIL_HOST_PASSWORD = 'sgvmgfsvrvzobjev'
+EMAIL_HOST_PASSWORD = 'oi'
